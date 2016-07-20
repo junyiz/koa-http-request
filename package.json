@@ -1,0 +1,28 @@
+{
+  "name": "koa-http-request",
+  "version": "1.0.0",
+  "description": "Smiplified HTTP request for koa",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/junyiz/koa-http-request.git"
+  },
+  "keywords": [
+    "http",
+    "simple",
+    "middleware"
+  ],
+  "author": "Junyi Zhang <junyime@qq.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/junyiz/koa-http-request/issues"
+  },
+  "homepage": "https://github.com/junyiz/koa-http-request#readme",
+  "dependencies": {
+    "bufferhelper": "^0.2.1",
+    "iconv-lite": "^0.4.13"
+  }
+}
