@@ -46,7 +46,7 @@ function getOptions(url, method, headers) {
 function request(method) {
     return function (url, params, headers) {
         var ctx = this,
-            cb, result, called, req, abort,
+            cb, result, called, req, abort, opts,
             httpReqeust = /^https/.test(url) ? https.request : http.request;
 
         function done() {
@@ -62,8 +62,20 @@ function request(method) {
             done();
         }
 
+
         if (method == 'GET' && typeof params === 'object' && params !== null) {
             url += (url.indexOf('?') > -1 ? '&' : '?') + getParam(params);
+        } 
+
+        opts = getOptions(url, method, headers);
+
+        if (method == 'POST') {
+            if (typeof params === 'object' && params !== null) {
+                params = qsStringify(params);
+                opts.headers['Content-Length'] = params.length; 
+            } else {
+                opts.headers['Content-Length'] = 0; 
+            }
         }
 
         abort = setTimeout(function() {
@@ -71,7 +83,7 @@ function request(method) {
             error(url + ' timeout');
         }, options.timeout);
 
-        req = httpReqeust(getOptions(url, method, headers), function(res) {
+        req = httpReqeust(opts, function(res) {
             var bufferHelper = new BufferHelper();
 
             clearTimeout(abort);
@@ -90,8 +102,8 @@ function request(method) {
 
         req.on('error', error);
 
-        if (method == 'POST') {
-            req.write(qsStringify(params));
+        if (method == 'POST' && params) {
+            req.write(params);
         }
 
         req.end();
