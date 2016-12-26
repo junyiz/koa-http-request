@@ -5,6 +5,8 @@ var qsStringify = require('querystring').stringify;
 var iconv = require('iconv-lite');
 var BufferHelper = require('bufferhelper');
 var options = {
+    host: '',
+    dataType: '',
     timeout: 2e4
 };
 
@@ -46,11 +48,20 @@ function getOptions(url, method, headers) {
 function request(method) {
     return function (url, params, headers) {
         var ctx = this,
-            cb, result, called, req, abort, opts,
-            httpReqeust = /^https/.test(url) ? https.request : http.request;
+            cb, result, called, req, abort, opts, httpReqeust;
+
+        url = /^http/.test(url) ? url : options.host + url;
+        httpReqeust = /^https/.test(url) ? https.request : http.request;
 
         function done() {
             if (!called && result !== undefined && cb) {
+                if (options.dataType == 'json') {
+                    try {
+                        result = JSON.parse(result);
+                    } catch(e) {
+                        result = e;
+                    }
+                }
                 cb.call(ctx, null, result);
                 called = true;
             }
@@ -61,7 +72,6 @@ function request(method) {
             result = JSON.stringify({message: e});
             done();
         }
-
 
         if (method == 'GET' && typeof params === 'object' && params !== null) {
             url += (url.indexOf('?') > -1 ? '&' : '?') + getParam(params);
