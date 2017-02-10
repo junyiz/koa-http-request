@@ -7,7 +7,7 @@ var BufferHelper = require('bufferhelper');
 var options = {
     host: '',
     dataType: '',
-    timeout: 2e4
+    timeout: 3000
 };
 
 /**
