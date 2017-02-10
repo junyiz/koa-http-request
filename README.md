@@ -10,19 +10,11 @@ To install simply run:
 npm install koa-http-request
 ```
 
-Require koa first and will only work on node v0.11.7 or newer.
-
-You must run node with --harmony flag (--harmony-generators works as well)
-
-```bash
-node --harmony example.js
-```
-
 Simple example using koa-http-request in koa:
 
 ```js
 var koa = require('koa');
-var koaRequest = require('../index'); //koa-http-request
+var koaRequest = require('koa-http-request');
 var app = koa();
 
 app.use(koaRequest({

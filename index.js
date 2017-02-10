@@ -7,7 +7,7 @@ var BufferHelper = require('bufferhelper');
 var options = {
     host: '',
     dataType: '',
-    timeout: 3000
+    timeout: 30000
 };
 
 /**
@@ -25,7 +25,7 @@ function getParam(params) {
 
 /**
  *  @param {String} url  
- *  @param {String} method  POST | GET
+ *  @param {String} method  GET | HEAD | POST | PUT | DELETE
  *  @param {Object} headers
  */
 function getOptions(url, method, headers) {
@@ -43,7 +43,7 @@ function getOptions(url, method, headers) {
 }
 
 /**
- *  @param {String} method  POST | GET
+ *  @param {String} method  GET | HEAD | POST | PUT | DELETE
  */
 function request(method) {
     return function (url, params, headers) {
@@ -73,13 +73,13 @@ function request(method) {
             done();
         }
 
-        if (method == 'GET' && typeof params === 'object' && params !== null) {
+        if ((method == 'GET' || method == 'HEAD') && typeof params === 'object' && params !== null) {
             url += (url.indexOf('?') > -1 ? '&' : '?') + getParam(params);
-        } 
+        }
 
         opts = getOptions(url, method, headers);
 
-        if (method == 'POST') {
+        if (method == 'POST' || method == 'PUT') {
             if (typeof params === 'object' && params !== null) {
                 params = qsStringify(params);
                 opts.headers['Content-Length'] = params.length; 
@@ -112,7 +112,7 @@ function request(method) {
 
         req.on('error', error);
 
-        if (method == 'POST' && params) {
+        if ((method == 'POST' || method == 'PUT') && params) {
             req.write(params);
         }
 
@@ -129,7 +129,10 @@ module.exports = function(config) {
 
     return function* (next) {
         this.get = request('GET').bind(this);
+        this.head = request('HEAD').bind(this);
         this.post = request('POST').bind(this);
+        this.put = request('PUT').bind(this);
+        this.delete = request('DELETE').bind(this);
 
         yield next;
     }
