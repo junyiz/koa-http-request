@@ -9,7 +9,7 @@ describe('koa-http-request', function() {
     it('get', function(done) {
         var app = koa()
 
-        app.use(koaRequest())
+        app.use(koaRequest({dataType: ''}))
 
         app.use(function* () {
             var res = yield this.get(uri)
@@ -23,7 +23,7 @@ describe('koa-http-request', function() {
     it('head', function(done) {
         var app = koa()
 
-        app.use(koaRequest())
+        app.use(koaRequest({dataType: ''}))
 
         app.use(function* () {
             var res = yield this.head(uri)

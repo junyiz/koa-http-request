@@ -124,8 +124,8 @@ function request(method) {
     }
 }
 
-module.exports = function(config) {
-    options = Object.assign(options, config);
+module.exports = function(opts) {
+    options = Object.assign(options, opts || {});
 
     return function* (next) {
         this.get = request('GET').bind(this);
