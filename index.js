@@ -13,7 +13,7 @@ var options = {
 /**
  *  @param {Object} params
  */
-function getParam(params) {
+function createParam(params) {
     var ret = [];
 
     for (var i in params) {
@@ -28,7 +28,7 @@ function getParam(params) {
  *  @param {String} method  GET | HEAD | POST | PUT | DELETE
  *  @param {Object} headers
  */
-function getOptions(url, method, headers) {
+function createOptions(url, method, headers) {
     url = urlParse(url);
 
     return {
@@ -69,15 +69,15 @@ function request(method) {
 
         function error(e) {
             clearTimeout(abort);
-            result = JSON.stringify({message: e});
+            result = JSON.stringify(e);
             done();
         }
 
         if ((method == 'GET' || method == 'HEAD') && typeof params === 'object' && params !== null) {
-            url += (url.indexOf('?') > -1 ? '&' : '?') + getParam(params);
+            url += (url.indexOf('?') > -1 ? '&' : '?') + createParam(params);
         }
 
-        opts = getOptions(url, method, headers);
+        opts = createOptions(url, method, headers);
 
         if (method == 'POST' || method == 'PUT') {
             if (typeof params === 'object' && params !== null) {

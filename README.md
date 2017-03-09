@@ -1,33 +1,35 @@
-koa-http-request
-===========
-
-Simplified HTTP request for koa.
+# koa-http-request
+Simplified HTTP request for Koa.
 
 
-To install simply run:
+# Install
 
 ```bash
 npm install koa-http-request
 ```
 
-Simple example using koa-http-request in koa:
+# Usage
 
-```js
+```javascript
 var koa = require('koa');
 var koaRequest = require('koa-http-request');
 var app = koa();
 
 app.use(koaRequest({
   dataType: 'json', //automatically parsing of JSON response
-  timeout: 3000     //3s timeout
+  timeout: 3000,    //3s timeout
+  host: 'https://api.github.com'
 }));
 
 app.use(function* () {
-	var res = yield this.get('https://api.github.com/repos/junyiz/koa-http-request', null, {
+	var repo = yield this.get('/repos/junyiz/koa-http-request', null, {
         'User-Agent': 'koa-http-request'
     });
-	this.body = 'repos id: ' + info.id + '\nrepos name: ' + info.full_name;
+	this.body = 'repos id: ' + repo.id + '\nrepos name: ' + repo.full_name;
 });
 
 app.listen(process.env.PORT || 8090);
 ```
+
+# License
+MIT
