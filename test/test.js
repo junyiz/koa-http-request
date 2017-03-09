@@ -5,14 +5,14 @@ var request = require('supertest')
 var koaRequest = require('../index')
 var expect = require('chai').expect
 
-describe('koa-http-request', function() {
+describe('koa-http-request 2', function() {
     it('get', function(done) {
-        var app = koa()
+        var app = new koa()
 
         app.use(koaRequest({dataType: ''}))
 
-        app.use(function* () {
-            var res = yield this.get(uri)
+        app.use(async ctx => {
+            var res = await ctx.get(uri)
             expect(res).to.be.equal('/')
             done()
         })
@@ -21,12 +21,12 @@ describe('koa-http-request', function() {
     })
 
     it('head', function(done) {
-        var app = koa()
+        var app = new koa()
 
         app.use(koaRequest({dataType: ''}))
 
-        app.use(function* () {
-            var res = yield this.head(uri)
+        app.use(async ctx => {
+            var res = await ctx.head(uri)
             expect(res).to.be.equal('')
             done()
         })
@@ -35,12 +35,12 @@ describe('koa-http-request', function() {
     })
 
     it('post', function(done) {
-        var app = koa()
+        var app = new koa()
 
         app.use(koaRequest({dataType: 'json'}))
 
-        app.use(function* () {
-            var res = yield this.post(uri, {
+        app.use(async ctx => {
+            var res = await ctx.post(uri, {
                 name: 'junyiz'
             })
             expect(res.name).to.be.equal('junyiz')
@@ -51,12 +51,12 @@ describe('koa-http-request', function() {
     })
 
     it('put', function(done) {
-        var app = koa()
+        var app = new koa()
 
         app.use(koaRequest({dataType: 'json'}))
 
-        app.use(function* () {
-            var res = yield this.put(uri, {
+        app.use(async ctx => {
+            var res = await ctx.put(uri, {
                 name: 'junyiz'
             })
             expect(res.name).to.be.equal('junyiz')
@@ -67,12 +67,12 @@ describe('koa-http-request', function() {
     })
 
     it('delete', function(done) {
-        var app = koa()
+        var app = new koa()
 
         app.use(koaRequest({dataType: ''}))
 
-        app.use(function* () {
-            var res = yield this.delete(uri, {
+        app.use(async ctx => {
+            var res = await ctx.delete(uri, {
                 name: 'junyiz'
             })
             expect(res).to.be.equal('DELETE')

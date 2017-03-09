@@ -1,20 +1,26 @@
-var app = require('koa')()
+var koa = require('koa')
 var koaBody = require('koa-body')
+var app = new koa()
 const port = 5000
 
 app.use(koaBody())
-app.use(function* (next) {
-    if (this.method == 'GET') {
-        this.body = this.path
-    } else if (this.method == 'HEAD') {
-        this.body = ''
-    } else if (this.method == 'POST') {
-        this.body = this.request.body
-    } else if (this.method == 'PUT') {
-        this.body = this.request.body
-    } else if (this.method == 'DELETE') {
-        this.body = 'DELETE'
+
+app.use(ctx => {
+    var method = ctx.method, body = ''
+
+    if (method == 'GET') {
+        body = ctx.path
+    } else if (method == 'HEAD') {
+        body = ''
+    } else if (method == 'POST') {
+        body = ctx.request.body
+    } else if (method == 'PUT') {
+        body = ctx.request.body
+    } else if (method == 'DELETE') {
+        body = 'DELETE'
     }
+    
+    ctx.body = body
 })
 
 app.listen(port)

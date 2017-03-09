@@ -1,22 +1,23 @@
 {
   "name": "koa-http-request",
-  "version": "1.1.1",
-  "description": "Smiplified HTTP request for koa",
+  "version": "2.0.0",
+  "description": "Smiplified HTTP request for Koa",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha"
+    "test": "./node_modules/.bin/mocha"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/junyiz/koa-http-request.git"
   },
   "keywords": [
+    "koa",
     "http",
-    "simple",
+    "request",
     "middleware"
   ],
   "author": "Junyi Zhang <junyime@qq.com>",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/junyiz/koa-http-request/issues"
   },
@@ -27,7 +28,8 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "koa-body": "^1.6.0",
+    "koa": "^2.1.0",
+    "koa-body": "^2.0.0",
     "mocha": "^3.1.2",
     "supertest": "^2.0.1"
   }

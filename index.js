@@ -13,7 +13,7 @@ var options = {
 /**
  *  @param {Object} params
  */
-function getParam(params) {
+function createParams(params) {
     var ret = [];
 
     for (var i in params) {
@@ -28,7 +28,7 @@ function getParam(params) {
  *  @param {String} method  GET | HEAD | POST | PUT | DELETE
  *  @param {Object} headers
  */
-function getOptions(url, method, headers) {
+function createOptions(url, method, headers) {
     url = urlParse(url);
 
     return {
@@ -47,37 +47,32 @@ function getOptions(url, method, headers) {
  */
 function request(method) {
     return function (url, params, headers) {
-        var ctx = this,
-            cb, result, called, req, abort, opts, httpReqeust;
+        var cb, result, req, abort, opts, httpReqeust;
 
         url = /^http/.test(url) ? url : options.host + url;
         httpReqeust = /^https/.test(url) ? https.request : http.request;
 
         function done() {
-            if (!called && result !== undefined && cb) {
-                if (options.dataType == 'json') {
-                    try {
-                        result = JSON.parse(result);
-                    } catch(e) {
-                        result = e;
-                    }
+            if (options.dataType == 'json') {
+                try {
+                    result = JSON.parse(result);
+                } catch(e) {
+                    result = e;
                 }
-                cb.call(ctx, null, result);
-                called = true;
             }
+            cb(result);
         }
 
         function error(e) {
             clearTimeout(abort);
-            result = JSON.stringify({message: e});
-            done();
+            cb(JSON.stringify(e));
         }
 
         if ((method == 'GET' || method == 'HEAD') && typeof params === 'object' && params !== null) {
-            url += (url.indexOf('?') > -1 ? '&' : '?') + getParam(params);
+            url += (url.indexOf('?') > -1 ? '&' : '?') + createParams(params);
         }
 
-        opts = getOptions(url, method, headers);
+        opts = createOptions(url, method, headers);
 
         if (method == 'POST' || method == 'PUT') {
             if (typeof params === 'object' && params !== null) {
@@ -118,22 +113,22 @@ function request(method) {
 
         req.end();
 
-        return function(fn) {
-            cb = fn;
-        }
+        return new Promise(function(resolve) {
+            cb = resolve;
+        });
     }
 }
 
 module.exports = function(opts) {
     options = Object.assign(options, opts || {});
 
-    return function* (next) {
-        this.get = request('GET').bind(this);
-        this.head = request('HEAD').bind(this);
-        this.post = request('POST').bind(this);
-        this.put = request('PUT').bind(this);
-        this.delete = request('DELETE').bind(this);
+    return async function(ctx, next) {
+        ctx.get = request('GET');
+        ctx.head = request('HEAD');
+        ctx.post = request('POST');
+        ctx.put = request('PUT');
+        ctx.delete = request('DELETE');
 
-        yield next;
+        await next();
     }
 }
