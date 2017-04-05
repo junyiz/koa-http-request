@@ -24,8 +24,8 @@ function createParams(params) {
 }
 
 /**
- *  @param {String} url  
- *  @param {String} method  GET | HEAD | POST | PUT | DELETE
+ *  @param {String} url
+ *  @param {String} method  GET | HEAD | POST | PUT | PATCH | DELETE
  *  @param {Object} headers
  */
 function createOptions(url, method, headers) {
@@ -43,7 +43,7 @@ function createOptions(url, method, headers) {
 }
 
 /**
- *  @param {String} method  GET | HEAD | POST | PUT | DELETE
+ *  @param {String} method  GET | HEAD | POST | PUT | PATCH | DELETE
  */
 function request(method) {
     return function (url, params, headers) {
@@ -73,13 +73,17 @@ function request(method) {
         }
 
         opts = createOptions(url, method, headers);
+        
+        if (options.dataType == 'json' && opts.headers.accept === undefined) {
+            opts.headers.accept = 'application/json';
+        }
 
-        if (method == 'POST' || method == 'PUT') {
+        if (method == 'POST' || method == 'PUT' || method == 'PATCH') {
             if (typeof params === 'object' && params !== null) {
                 params = qsStringify(params);
-                opts.headers['Content-Length'] = params.length; 
+                opts.headers['Content-Length'] = params.length;
             } else {
-                opts.headers['Content-Length'] = 0; 
+                opts.headers['Content-Length'] = 0;
             }
         }
 
@@ -107,7 +111,7 @@ function request(method) {
 
         req.on('error', error);
 
-        if ((method == 'POST' || method == 'PUT') && params) {
+        if ((method == 'POST' || method == 'PUT' || method == 'PATCH') && params) {
             req.write(params);
         }
 
@@ -123,11 +127,9 @@ module.exports = function(opts) {
     options = Object.assign(options, opts || {});
 
     return async function(ctx, next) {
-        ctx.get = request('GET');
-        ctx.head = request('HEAD');
-        ctx.post = request('POST');
-        ctx.put = request('PUT');
-        ctx.delete = request('DELETE');
+        ['get', 'head', 'post', 'put', 'patch', 'delete'].forEach(function(item) {
+            ctx[item] = request(item.toUpperCase())
+        })
 
         await next();
     }

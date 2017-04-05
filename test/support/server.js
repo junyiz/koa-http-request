@@ -16,6 +16,8 @@ app.use(ctx => {
         body = ctx.request.body
     } else if (method == 'PUT') {
         body = ctx.request.body
+    } else if (method == 'PATCH') {
+        body = ctx.request.body
     } else if (method == 'DELETE') {
         body = 'DELETE'
     }

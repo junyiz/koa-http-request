@@ -5,7 +5,7 @@ var request = require('supertest')
 var koaRequest = require('../index')
 var expect = require('chai').expect
 
-describe('koa-http-request 2', function() {
+describe('koa-http-request', function() {
     it('get', function(done) {
         var app = new koa()
 
@@ -57,6 +57,22 @@ describe('koa-http-request 2', function() {
 
         app.use(async ctx => {
             var res = await ctx.put(uri, {
+                name: 'junyiz'
+            })
+            expect(res.name).to.be.equal('junyiz')
+            done()
+        })
+
+        request(app.listen()).get('/').end(function() {})
+    })
+
+    it('patch', function(done) {
+        var app = new koa()
+
+        app.use(koaRequest({dataType: 'json'}))
+
+        app.use(async ctx => {
+            var res = await ctx.patch(uri, {
                 name: 'junyiz'
             })
             expect(res.name).to.be.equal('junyiz')
