@@ -32,5 +32,8 @@
     "koa-body": "^2.0.0",
     "mocha": "^3.1.2",
     "supertest": "^2.0.1"
-  }
+  },
+  "files": [
+    "index.js"
+  ]
 }
