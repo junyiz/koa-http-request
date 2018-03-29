@@ -1,6 +1,6 @@
 {
   "name": "koa-http-request",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Smiplified HTTP request for Koa",
   "main": "index.js",
   "repository": {
@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/junyiz/koa-http-request#readme",
   "dependencies": {
-    "zenio": "0.0.6"
+    "zenio": "0.0.7"
   },
   "files": [
     "index.js"
